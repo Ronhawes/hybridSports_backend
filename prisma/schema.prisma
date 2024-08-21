@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model coaches {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String?   @unique @db.Uuid
+  bio        String?
+  experience Int?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_coaches_user_id")
+}
+
+model event_registrations {
+  id         BigInt    @id @default(autoincrement())
+  event_id   String?   @db.Uuid
+  user_id    String?   @db.Uuid
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  events     events?   @relation(fields: [event_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([event_id], map: "idx_event_registrations_event_id")
+  @@index([user_id], map: "idx_event_registrations_user_id")
+}
+
+model events {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title               String                @db.VarChar(255)
+  description         String?
+  date                DateTime              @db.Timestamp(6)
+  location            String?               @db.VarChar(255)
+  organizer_id        String?               @db.Uuid
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  updated_at          DateTime?             @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
+  event_registrations event_registrations[]
+  users               users?                @relation(fields: [organizer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model men_rankings {
+  id         BigInt    @id @default(autoincrement())
+  user_id    String?   @unique @db.Uuid
+  rank       Int
+  points     Int
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model trainers {
+  id         BigInt    @id @default(autoincrement())
+  user_id    String?   @unique @db.Uuid
+  bio        String?
+  specialty  String?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  gender     String?   @db.VarChar
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_trainers_user_id")
+}
+
+model users {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email               String                @unique @db.VarChar(255)
+  password_hash       String                @db.VarChar(255)
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  fullnames           String?               @db.VarChar
+  username            String?               @db.VarChar
+  updated_at          DateTime?             @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
+  gender              String?               @db.VarChar
+  coaches             coaches?
+  event_registrations event_registrations[]
+  events              events[]
+  men_rankings        men_rankings?
+  trainers            trainers?
+  women_rankings      women_rankings?
+}
+
+model women_rankings {
+  id         BigInt    @id @default(autoincrement())
+  user_id    String?   @unique @db.Uuid
+  rank       Int
+  points     Int
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
