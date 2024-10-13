@@ -13,6 +13,10 @@ app.use(cors());
 app.use(bodyParser.json());
 const error = require("./API/middlewares/error")
 const USERS= require("./API/routes/users")
+const menSingles= require("./API/routes/menSingles")
+const menDoubles= require("./API/routes/menDoubles.js")
+const womenDoubles= require("./API/routes/womenDoubles.js")
+const womenSingles= require("./API/routes/womenSingles")
 
 
 
@@ -36,6 +40,10 @@ app.get('/',(req, res)=>{
 
 app.use(error)
 app.use("/users", USERS)
+app.use("/menSingles", menSingles)
+app.use("/menDoubles", menDoubles)
+app.use("/womenSingles", womenSingles)
+app.use("/womenDoubles", womenDoubles)
 
 app.listen(PORT, () => {
     console.log(`App is listening to ${PORT}`)

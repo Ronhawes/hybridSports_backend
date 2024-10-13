@@ -8,13 +8,19 @@ datasource db {
 }
 
 model coaches {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id    String?   @unique @db.Uuid
-  bio        String?
-  experience Int?
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  updated_at DateTime? @default(now()) @db.Timestamp(6)
-  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String?   @unique @db.Uuid
+  bio            String?
+  created_at     DateTime? @default(now()) @db.Timestamp(6)
+  updated_at     DateTime? @default(now()) @db.Timestamp(6)
+  name           String?
+  title          String?
+  sport          String?
+  phoneNumber    Int?      @db.SmallInt
+  profilePicture String?
+  working_hrs    BigInt?
+  prices         BigInt?
+  users          users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([user_id], map: "idx_coaches_user_id")
 }
@@ -45,14 +51,27 @@ model events {
   users               users?                @relation(fields: [organizer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model men_rankings {
-  id         BigInt    @id @default(autoincrement())
-  user_id    String?   @unique @db.Uuid
-  rank       Int
-  points     Int
-  created_at DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at DateTime? @default(now()) @db.Timestamptz(6)
-  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model menDoubles {
+  id     Int    @id(map: "mendoubles_pkey") @default(autoincrement())
+  rank   Int
+  player String @db.VarChar(255)
+  points Int
+  age    Int?   @db.SmallInt
+}
+
+model menSingles {
+  id     Int     @id(map: "mensingles_pkey") @default(autoincrement())
+  rank   Int
+  age    Int?
+  points Int
+  name   String?
+}
+
+model mixedDoubles {
+  id     Int    @id(map: "mixeddoubles_pkey") @default(autoincrement())
+  rank   Int
+  player String @db.VarChar(255)
+  points Int
 }
 
 model trainers {
@@ -71,26 +90,29 @@ model trainers {
 model users {
   id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email               String                @unique @db.VarChar(255)
-  password_hash       String                @db.VarChar(255)
-  created_at          DateTime?             @default(now()) @db.Timestamp(6)
   fullnames           String?               @db.VarChar
-  username            String?               @db.VarChar
-  updated_at          DateTime?             @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
   gender              String?               @db.VarChar
+  created_at          DateTime?             @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime?             @db.Timestamptz(6)
+  institution         String?
+  phoneNo             BigInt?
   coaches             coaches?
   event_registrations event_registrations[]
   events              events[]
-  men_rankings        men_rankings?
   trainers            trainers?
-  women_rankings      women_rankings?
 }
 
-model women_rankings {
-  id         BigInt    @id @default(autoincrement())
-  user_id    String?   @unique @db.Uuid
-  rank       Int
-  points     Int
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  updated_at DateTime? @default(now()) @db.Timestamptz(6)
-  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model womenDoubles {
+  id     Int    @id(map: "womendoubles_pkey") @default(autoincrement())
+  rank   Int
+  name   String @db.VarChar(255)
+  points Int
+}
+
+model womenSingles {
+  id     Int    @id(map: "womensingles_pkey") @default(autoincrement())
+  rank   Int
+  name   String @db.VarChar(255)
+  age    Int?
+  points Int
 }

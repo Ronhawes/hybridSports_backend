@@ -3,9 +3,15 @@ CREATE TABLE "coaches" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "user_id" UUID,
     "bio" TEXT,
-    "experience" INTEGER,
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+    "name" TEXT,
+    "title" TEXT,
+    "sport" TEXT,
+    "phoneNumber" SMALLINT,
+    "profilePicture" TEXT,
+    "working_hrs" BIGINT,
+    "prices" BIGINT,
 
     CONSTRAINT "coaches_pkey" PRIMARY KEY ("id")
 );
@@ -36,15 +42,35 @@ CREATE TABLE "events" (
 );
 
 -- CreateTable
-CREATE TABLE "men_rankings" (
-    "id" BIGSERIAL NOT NULL,
-    "user_id" UUID,
+CREATE TABLE "menDoubles" (
+    "id" SERIAL NOT NULL,
     "rank" INTEGER NOT NULL,
+    "player" VARCHAR(255) NOT NULL,
     "points" INTEGER NOT NULL,
-    "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+    "age" SMALLINT,
 
-    CONSTRAINT "men_rankings_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "mendoubles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "menSingles" (
+    "id" SERIAL NOT NULL,
+    "rank" INTEGER NOT NULL,
+    "age" INTEGER,
+    "points" INTEGER NOT NULL,
+    "name" TEXT,
+
+    CONSTRAINT "mensingles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "mixedDoubles" (
+    "id" SERIAL NOT NULL,
+    "rank" INTEGER NOT NULL,
+    "player" VARCHAR(255) NOT NULL,
+    "points" INTEGER NOT NULL,
+
+    CONSTRAINT "mixeddoubles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -64,26 +90,35 @@ CREATE TABLE "trainers" (
 CREATE TABLE "users" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "email" VARCHAR(255) NOT NULL,
-    "password_hash" VARCHAR(255) NOT NULL,
-    "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "fullnames" VARCHAR,
-    "username" VARCHAR,
-    "updated_at" TIMESTAMPTZ(6) DEFAULT (now() AT TIME ZONE 'utc'::text),
     "gender" VARCHAR,
+    "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(6),
+    "institution" TEXT,
+    "phoneNo" BIGINT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "women_rankings" (
-    "id" BIGSERIAL NOT NULL,
-    "user_id" UUID,
+CREATE TABLE "womenDoubles" (
+    "id" SERIAL NOT NULL,
     "rank" INTEGER NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
     "points" INTEGER NOT NULL,
-    "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "women_rankings_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "womendoubles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "womenSingles" (
+    "id" SERIAL NOT NULL,
+    "rank" INTEGER NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "age" INTEGER,
+    "points" INTEGER NOT NULL,
+
+    CONSTRAINT "womensingles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -99,9 +134,6 @@ CREATE INDEX "idx_event_registrations_event_id" ON "event_registrations"("event_
 CREATE INDEX "idx_event_registrations_user_id" ON "event_registrations"("user_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "men_rankings_user_id_key" ON "men_rankings"("user_id");
-
--- CreateIndex
 CREATE UNIQUE INDEX "trainers_user_id_key" ON "trainers"("user_id");
 
 -- CreateIndex
@@ -109,9 +141,6 @@ CREATE INDEX "idx_trainers_user_id" ON "trainers"("user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "women_rankings_user_id_key" ON "women_rankings"("user_id");
 
 -- AddForeignKey
 ALTER TABLE "coaches" ADD CONSTRAINT "coaches_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -126,10 +155,4 @@ ALTER TABLE "event_registrations" ADD CONSTRAINT "event_registrations_user_id_fk
 ALTER TABLE "events" ADD CONSTRAINT "events_organizer_id_fkey" FOREIGN KEY ("organizer_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "men_rankings" ADD CONSTRAINT "men_rankings_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
 ALTER TABLE "trainers" ADD CONSTRAINT "trainers_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "women_rankings" ADD CONSTRAINT "women_rankings_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
