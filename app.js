@@ -14,10 +14,10 @@ app.use(bodyParser.json());
 const error = require("./API/middlewares/error")
 const USERS= require("./API/routes/users")
 const menSingles= require("./API/routes/menSingles")
-const menDoubles= require("./API/routes/menDoubles.js")
-const womenDoubles= require("./API/routes/womenDoubles.js")
+const menDoubles= require("./API/routes/menDoubles")
+const womenDoubles= require("./API/routes/womenDoubles")
 const womenSingles= require("./API/routes/womenSingles")
-
+const juniors=require("./API/routes/juniors")
 
 
 app.use(express.urlencoded({ extended: true}));
@@ -44,6 +44,7 @@ app.use("/menSingles", menSingles)
 app.use("/menDoubles", menDoubles)
 app.use("/womenSingles", womenSingles)
 app.use("/womenDoubles", womenDoubles)
+app.use("/juniors", juniors)
 
 app.listen(PORT, () => {
     console.log(`App is listening to ${PORT}`)

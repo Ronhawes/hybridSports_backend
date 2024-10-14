@@ -42,6 +42,20 @@ CREATE TABLE "events" (
 );
 
 -- CreateTable
+CREATE TABLE "juniors" (
+    "id" BIGSERIAL NOT NULL,
+    "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "fullName" TEXT,
+    "age" BIGINT,
+    "partner" TEXT,
+    "coach_Academy" TEXT,
+    "phoneNo" BIGINT,
+    "gender" TEXT,
+
+    CONSTRAINT "juniors_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "menDoubles" (
     "id" SERIAL NOT NULL,
     "rank" INTEGER NOT NULL,
@@ -54,13 +68,13 @@ CREATE TABLE "menDoubles" (
 
 -- CreateTable
 CREATE TABLE "menSingles" (
-    "id" SERIAL NOT NULL,
-    "rank" INTEGER NOT NULL,
-    "age" INTEGER,
+    "id" BIGSERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "age" INTEGER NOT NULL,
     "points" INTEGER NOT NULL,
-    "name" TEXT,
+    "rank" INTEGER NOT NULL,
 
-    CONSTRAINT "mensingles_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "mensingles_pkey1" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -112,13 +126,13 @@ CREATE TABLE "womenDoubles" (
 
 -- CreateTable
 CREATE TABLE "womenSingles" (
-    "id" SERIAL NOT NULL,
-    "rank" INTEGER NOT NULL,
-    "name" VARCHAR(255) NOT NULL,
-    "age" INTEGER,
+    "id" BIGSERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "age" INTEGER NOT NULL,
     "points" INTEGER NOT NULL,
+    "rank" INTEGER NOT NULL,
 
-    CONSTRAINT "womensingles_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "womenSingles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

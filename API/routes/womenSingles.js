@@ -1,4 +1,4 @@
-const { AddPlayer, DeletePlayer, UpdatePlayer, getAllPlayers,getPlayer } = require("../controllers/users")
+const { AddPlayer, DeletePlayer, UpdatePlayer, getAllPlayers,getPlayer } = require("../controllers/womenSingles")
 
 const router = require("express").Router()
 
