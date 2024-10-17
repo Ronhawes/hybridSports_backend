@@ -1,5 +1,12 @@
-const AddPlayer= require("./add")
+const AddPlayer = require("./add");
+const getAllPlayers = require("./getPlayers");
+const DeletePlayer = require("./delete");
+const UpdatePlayer = require("./update");
 
-module.exports={
-    AddPlayer
-}
+
+module.exports = {
+    AddPlayer,
+    getAllPlayers,
+    DeletePlayer,
+    UpdatePlayer
+};

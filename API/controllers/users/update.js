@@ -2,29 +2,35 @@ const prisma = require("../../prisma");
 
 const UpdatePlayer = async (req, res, next) => {
   try {
-    const { id, email,password_hash,fullnames, username, gender } = req.body;
+    const { id, fullnames, email, institution, phoneNo, gender } = req.body;
 
-    if (!email||!password_hash||!fullnames|| !username || !gender){
-      throw {
-        custom: true,
-        message: "ID, fullnames, gender, and username are required",
-      };
+    // Validate required fields
+    if (!id || !fullnames || !email || !institution || !phoneNo || !gender) {
+      return res.status(400).json({ 
+        message: "ID, fullnames, email, institution, phoneNo, and gender are required" 
+      });
     }
 
-    const updatedPlayer = await prisma.user.update({
-      where: { id: parseInt(id) },
+    // Convert ID to string
+    const playerId = id.toString();
+
+    // Attempt to update the player
+    const updatedPlayer = await prisma.users.update({
+      where: { id: playerId },
       data: {
-        email,
-        password_hash,
-        fullnames,
-        username,
-        gender,
+        fullnames, email, institution, phoneNo, gender
       },
     });
 
-    return res.status(200).json({ message: "Player updated successfully", user: updatedPlayer });
+    return res.status(200).json({ 
+      message: "Player updated successfully", 
+      users: updatedPlayer 
+    });
 
   } catch (error) {
+    if (error.code === 'P2025') { // Record not found
+      return res.status(404).json({ message: "Player not found" });
+    }
     next(error);
   }
 };

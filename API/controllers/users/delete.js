@@ -11,7 +11,7 @@ const DeletePlayer = async (req, res, next) => {
       };
     }
 
-    const player = await prisma.user.delete({
+    const player = await prisma.users.delete({
       where: {
         id: parseInt(id),
       },

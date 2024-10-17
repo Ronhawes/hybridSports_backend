@@ -2,42 +2,58 @@ const prisma = require("../../prisma");
 
 const AddPlayer = async (req, res, next) => {
   try {
-    const { email, fullnames, gender, institution, phoneNo } = req.body;
+    const { fullnames, email, institution, phoneNo, gender } = req.body;
 
-    // Check for missing required fields
-    if (!email || !institution || !fullnames || !phoneNo || !gender) {
+    // Check if all required fields are provided
+    if (!fullnames || !email || !institution || !phoneNo || !gender) {
       return res.status(400).json({
-        message: "All fields are required: fullnames, email, phoneNo, institution, and gender",
+        error: "All fields are required: fullnames, email, institution, phoneNo, and gender",
       });
     }
 
-    // Additional validation for email format or phone number could be added here
-    // Example: Simple email format check
-    const emailRegex = /\S+@\S+\.\S+/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: "Invalid email format." });
+    // Validate phone number (example: Kenyan phone numbers)
+    if (!/^\d{10}$/.test(phoneNo)) {
+      return res.status(400).json({ error: "Invalid phone number. It should have 10 digits." });
     }
 
-    // Create the player
-    const user = await prisma.users.create({
+    // Validate email format
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: "Invalid email format." });
+    }
+
+    // Create the new user player record
+    const player = await prisma.users.create({
       data: {
-        email,
         fullnames,
+        email,
         institution,
-        gender,
         phoneNo,
+        gender,
       },
     });
 
-    return res.status(201).json({ message: "Player was added successfully", user });
+    // Send success response
+    return res.status(201).json({
+      message: "Player was added successfully to users",
+      player,
+    });
 
   } catch (error) {
-    // Handle Prisma unique constraint violation
-    if (error.code === "P2002" && error.meta && error.meta.target.includes("email")) {
-      return res.status(409).json({ message: "Email already exists." });
+    // Handle Prisma-specific errors
+    if (error.code === 'P2002') {
+      return res.status(409).json({
+        error: "This player data conflicts with existing records.",
+      });
     }
 
-    // Pass other errors to the error handler middleware
+    if (error.code === 'P2003') {
+      return res.status(400).json({
+        error: "Invalid foreign key constraint.",
+      });
+    }
+
+    // General error handling
     next(error);
   }
 };

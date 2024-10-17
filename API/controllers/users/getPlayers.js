@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const getAllPlayers = async (req, res, next) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.users.findMany();
     if (users.length === 0) {
         throw{
             custom: true,

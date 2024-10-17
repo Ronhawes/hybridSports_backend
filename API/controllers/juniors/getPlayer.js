@@ -9,7 +9,7 @@ const getPlayer = async (req, res, next) => {
       return res.status(400).json({ message: "ID is required" });
     }
 
-    const user = await prisma.users.findUnique({
+    const user = await prisma.juniors.findUnique({
       where: { id: id },  // Use id as a string
     });
 
