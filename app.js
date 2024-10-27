@@ -18,6 +18,8 @@ const menDoubles= require("./API/routes/menDoubles")
 const womenDoubles= require("./API/routes/womenDoubles")
 const womenSingles= require("./API/routes/womenSingles")
 const juniors=require("./API/routes/juniors")
+const courts=require("./API/routes/courts")
+const coachesBooking = require("./API/routes/coaches")
 const TokenRoute = require("./API/routes/token");
 
 
@@ -47,6 +49,8 @@ app.use("/womenSingles", womenSingles)
 app.use("/womenDoubles", womenDoubles)
 app.use("/juniors", juniors)
 app.use("/token", TokenRoute);
+app.use("/courts", courts);
+app.use("/coachesBooking", coachesBooking);
 
 app.listen(PORT, () => {
     console.log(`App is listening to ${PORT}`)
