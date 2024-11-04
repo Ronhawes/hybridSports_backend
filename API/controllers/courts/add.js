@@ -2,10 +2,10 @@ const prisma = require("../../prisma");
 
 const AddPlayer = async (req, res, next) => {
   try {
-    const { fullName, email, idNo, phoneNo, time ,court} = req.body;
+    const { fullName, email, idNo, phoneNo, time ,court, day} = req.body;
 
     // Check if all required fields are provided
-    if (!fullName|| !email || !idNo|| !phoneNo || !time|| !court) {
+    if (!fullName|| !email || !idNo|| !phoneNo || !time|| !court || !day) {
       return res.status(400).json({
         error: "All fields are required: fullName, email, idNo, phoneNo, time ,court",
       });
@@ -25,7 +25,7 @@ const AddPlayer = async (req, res, next) => {
     // Create the new user player record
     const player = await prisma.courts.create({
       data: {
-        fullName, email, idNo, phoneNo, time, court
+        fullName, email, idNo, phoneNo, time, court, day
       },
     });
 

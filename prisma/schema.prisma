@@ -139,6 +139,7 @@ model coachesbooking {
   phoneNo    BigInt?
   time       String?  @db.VarChar
   coach      String?
+  day        String?
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -151,4 +152,5 @@ model courts {
   phoneNo    BigInt?
   time       String?  @db.VarChar
   court      String?
+  day        String?
 }

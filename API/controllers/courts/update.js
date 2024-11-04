@@ -2,10 +2,10 @@ const prisma = require("../../prisma");
 
 const UpdatePlayer = async (req, res, next) => {
   try {
-    const { id, fullName, email, idNo, phoneNo, time, court } = req.body;
+    const { id, fullName, email, idNo, phoneNo, time, court , day} = req.body;
 
     // Validate required fields
-    if (!id || !fullName|| !email || !idNo|| !phoneNo || !time ||!court) {
+    if (!id || !fullName|| !email || !idNo|| !phoneNo || !time ||!court || !day) {
       return res.status(400).json({ 
         message: "ID, fullnames, email, institution, phoneNo, and gender are required" 
       });
@@ -18,7 +18,7 @@ const UpdatePlayer = async (req, res, next) => {
     const updatedPlayer = await prisma.courts.update({
       where: { id: playerId },
       data: {
-        fullName, email, idNo, phoneNo, time, court
+        fullName, email, idNo, phoneNo, time, court, day
       },
     });
 
