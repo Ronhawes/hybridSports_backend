@@ -2,36 +2,39 @@ const prisma = require("../../prisma");
 
 const UpdatePlayer = async (req, res, next) => {
   try {
-    const { id, fullName, email, idNo, phoneNo, time,coach , day} = req.body;
+    const { id, fullName, email, idNo, phoneNo, gender, country, physicalCondition, price } = req.body;
 
     // Validate required fields
-    if (!id || !fullName|| !email || !idNo|| !phoneNo || !time|| !coach || !day) {
+    if (!id || !fullName || !email || !idNo || !phoneNo || !gender || !country || !physicalCondition || !price) {
       return res.status(400).json({ 
-        message: "ID, fullnames, email, institution, phoneNo, and gender are required" 
+        message: "ID, fullName, email, idNo, phoneNo, gender, country, physicalCondition, and price are required" 
       });
     }
 
-    // Convert ID to string
+    // Convert ID to string, if necessary
     const playerId = id.toString();
 
     // Attempt to update the player
     const updatedPlayer = await prisma.tickets.update({
       where: { id: playerId },
       data: {
-        fullName, email, idNo, phoneNo, time, coach, day
+        fullName, email, idNo, phoneNo, gender, country, physicalCondition, price
       },
     });
 
     return res.status(200).json({ 
       message: "Player updated successfully", 
-      users: updatedPlayer 
+      player: updatedPlayer 
     });
 
   } catch (error) {
-    if (error.code === 'P2025') { // Record not found
+    // Handle record not found error (P2025 is a Prisma-specific code)
+    if (error.code === 'P2025') {
       return res.status(404).json({ message: "Player not found" });
     }
-    next(error);
+    
+    // Handle any other errors
+    return next(error);
   }
 };
 

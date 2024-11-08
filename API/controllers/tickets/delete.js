@@ -11,7 +11,7 @@ const DeletePlayer = async (req, res, next) => {
       };
     }
 
-    const player = await prisma.coachesbooking.delete({
+    const player = await prisma.tickets.delete({
       where: {
         id: parseInt(id),
       },
