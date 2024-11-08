@@ -21,6 +21,7 @@ const juniors=require("./API/routes/juniors")
 const courts=require("./API/routes/courts")
 const coachesBooking = require("./API/routes/coaches")
 const TokenRoute = require("./API/routes/token");
+const Tickets= require("./API/routes/tickets")
 
 
 app.use(express.urlencoded({ extended: true}));
@@ -51,6 +52,7 @@ app.use("/juniors", juniors)
 app.use("/token", TokenRoute);
 app.use("/courts", courts);
 app.use("/coachesBooking", coachesBooking);
+app.use("/tickets", Tickets)
 
 app.listen(PORT, () => {
     console.log(`App is listening to ${PORT}`)
