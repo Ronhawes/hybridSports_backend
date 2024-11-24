@@ -8,21 +8,19 @@ datasource db {
 }
 
 model coaches {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id        String?   @unique @db.Uuid
-  bio            String?
-  created_at     DateTime? @default(now()) @db.Timestamp(6)
-  updated_at     DateTime? @default(now()) @db.Timestamp(6)
-  name           String?
-  title          String?
-  sport          String?
-  phoneNumber    Int?      @db.SmallInt
-  profilePicture String?
-  working_hrs    BigInt?
-  prices         BigInt?
-  users          users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@index([user_id], map: "idx_coaches_user_id")
+  id              Int     @id @default(autoincrement())
+  name            String
+  title           String
+  sport           String
+  academy         String?
+  bio             String?
+  email           String  @unique
+  phoneno         String
+  profile_picture String?
+  working_hours   String?
+  levels          String?
+  groups          String?
+  schedule        Json?
 }
 
 model event_registrations {
@@ -108,7 +106,6 @@ model users {
   updated_at          DateTime?             @db.Timestamptz(6)
   institution         String?
   phoneNo             BigInt?
-  coaches             coaches?
   event_registrations event_registrations[]
   events              events[]
   trainers            trainers?
@@ -167,4 +164,23 @@ model tickets {
   country           String?
   physicalCondition String?
   price             BigInt?
+}
+
+model transaction {
+  id                 BigInt    @id @default(autoincrement())
+  phoneno            String
+  amount             Float
+  checkoutrequestid  String    @unique
+  status             String
+  mpesareceiptnumber String?
+  createdat          DateTime? @default(now()) @db.Timestamptz(6)
+  updatedat          DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user2 {
+  id         BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  username   String?  @db.VarChar
+  password   String?  @db.VarChar
 }

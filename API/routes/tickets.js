@@ -1,8 +1,10 @@
-const { AddPlayer, DeletePlayer, UpdatePlayer, getAllPlayers,getPlayer } = require("../controllers/tickets")
+const { generateToken, stkPush, DeletePlayer, UpdatePlayer, getAllPlayers,getPlayer,AddPlayer } = require("../controllers/tickets")
 
 const router = require("express").Router()
 
-router.post("/add", AddPlayer)
+router.post("/stk", generateToken, stkPush);
+router.post("/add", AddPlayer);
+
 router.delete("/delete", DeletePlayer)
 router.put("/update", UpdatePlayer)
 
