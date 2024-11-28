@@ -1,4 +1,4 @@
-const { generateToken, stkPush } = require("./stk")
+const { generateToken, stkPush, handleCallback  } = require("./stk")
 const AddPlayer=require("./add")
 const DeletePlayer = require("./delete")
 const UpdatePlayer = require("./update")
@@ -15,6 +15,7 @@ module.exports = {
     AddPlayer,
     DeletePlayer,
     getAllPlayers,
-    getPlayer
+    getPlayer,
+    handleCallback 
 }
 

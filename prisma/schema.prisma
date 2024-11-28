@@ -18,9 +18,10 @@ model coaches {
   phoneno         String
   profile_picture String?
   working_hours   String?
-  levels          String?
   groups          String?
   schedule        Json?
+  username        String? @db.VarChar
+  password        String? @db.VarChar
 }
 
 model event_registrations {

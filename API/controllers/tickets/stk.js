@@ -1,4 +1,3 @@
-// /controllers/tickets/add.js
 const axios = require("axios");
 const MPESA_BASE_URL = process.env.MPESA_MODE === "production"
     ? "https://api.safaricom.co.ke"
@@ -38,7 +37,7 @@ const stkPush = async (req, res) => {
         price,
     } = req.body;
 
-    if ( !phoneNo ||  !price) {
+    if (!phoneNo || !price) {
         return res.status(400).json({
             success: false,
             message: "All fields are required.",
@@ -88,7 +87,50 @@ const stkPush = async (req, res) => {
     }
 };
 
+const handleCallback = async (req, res) => {
+    try {
+        const { Body } = req.body;
+
+        if (!Body || !Body.stkCallback) {
+            return res.status(400).json({ success: false, message: "Invalid callback data" });
+        }
+
+        const { stkCallback } = Body;
+        const { ResultCode, ResultDesc, CallbackMetadata } = stkCallback;
+
+        if (ResultCode === 0) {
+            // Payment successful
+            const metadata = CallbackMetadata.Item.reduce((acc, item) => {
+                acc[item.Name] = item.Value;
+                return acc;
+            }, {});
+
+            const paymentData = {
+                amount: metadata.Amount,
+                receiptNumber: metadata.MpesaReceiptNumber,
+                phoneNumber: metadata.PhoneNumber,
+                transactionDate: metadata.TransactionDate,
+            };
+
+            console.log("Payment Success:", paymentData);
+
+            // Save payment data to your database or perform your logic here
+            // e.g., mark a ticket as paid or create a payment record
+
+            res.status(200).json({ success: true, message: "Payment received", data: paymentData });
+        } else {
+            // Payment failed
+            console.error("Payment Failed:", ResultDesc);
+            res.status(400).json({ success: false, message: `Payment failed: ${ResultDesc}` });
+        }
+    } catch (error) {
+        console.error("Error handling callback:", error.message);
+        res.status(500).json({ success: false, message: "Server error handling callback" });
+    }
+};
+
 module.exports = {
     generateToken,
     stkPush,
+    handleCallback, // Export the callback handler
 };
